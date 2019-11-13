@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="kosta.mapper.BoardMapper">
+	<cache />
+	
+	<insert id="insertBoard" parameterType="Board">
+		insert into board values(board_seq.nextval, #{title},
+												#{writer}, #{contents}, sysdate, 0, #{fname})
+	</insert>
+	
+	<!-- select * from board
+						where (title LIKE %홍길동% OR writer LIKE %홍길동%)
+	 -->
+	<select id="listBoard" parameterType="Search" resultType="Board">
+		select * from board 
+		<if test="area != null">
+			<where>
+				<foreach collection="area" item="item" separator="OR"
+						open="(" close=")">
+					${item} LIKE #{searchKey}	
+				</foreach>
+			</where>
+		</if>
+		order by seq desc
+	</select>
+	
+	<select id="detailBoard" parameterType="int" resultType="Board">
+		select * from board where seq=#{seq}
+	</select>
+	
+	<select id="countBoard" parameterType="Search" resultType="int">
+		select count(*) from board
+		<if test="area != null">
+			<where>
+				<foreach collection="area" item="item" separator="OR"
+						open="(" close=")">
+					${item} LIKE #{searchKey}	
+				</foreach>
+			</where>
+		</if>
+	</select>
+	
+	
+	
+
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
